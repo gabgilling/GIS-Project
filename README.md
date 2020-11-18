@@ -9,16 +9,24 @@ Then, I downloaded the location of the GHG facilities from the [EPA](https://ghg
 
 Before I could map anything out, I had to merge the preference data to the CD shape file. In order to do so, I created an index by averaging the mean level of support for environment related questions by CD for both 2018 and 2019. 
 Questions included:  
-	- Giving more power to the EPA to highten CO2 emission regulation
-	- Requiring a quota of minimum of renewable fuels generation in each state
-	- Strengthening the EPA and it's ability to enforce regulations
-	- Withdrawal from the 2016 Paris Accords.
+
+	* Giving more power to the EPA to highten CO2 emission regulation
+	* Requiring a quota of minimum of renewable fuels generation in each state
+	* Strengthening the EPA and it's ability to enforce regulations
+	* Withdrawal from the 2016 Paris Accords.
 
 This method is called dissagregation is while very simple to implement for initial analyses, will probably have to be supplemented by more sophisticated models down the road. I have in mind using Multi-level Regression and Poststrafication further on to create more robust estimates. 
-Higher values for the dependent variable *pref_index* indicate favorable opinions for regulation, and vice versa. I then loaded in the .dbf file associated with the CD polygons and merge the preferences into it. You can find all of the code in the wrangle.R file in the repo.
+Higher values for the dependent variable *pref_index* indicate favorable opinions for regulation, and vice versa. You can find all of the code in the wrangle.R file in the repo.
 
 Let's look at the distribution of the preferences:
 ![env_prefs](/Plots/epi.png)
 
-We're interested in assessing visually whether higher amounts of GHG emitting facilities correlates with weaker desire for regulation. Unfortunately, this first map doesn't seem to tell us a clear story, so we need to look at additional variables. For instance, there is a very heavy concentration of facilities in the North-East of the country but most of the map in that area is in shades of blue or yellow. Oddly enough, voters in Wyoming don't seem to be very opposed to regulations
+We're interested in assessing visually whether higher amounts of GHG emitting facilities correlates with weaker desire for regulation. Unfortunately, this first map doesn't seem to tell us a clear story, so we need to look at additional variables. For instance, there is a very heavy concentration of facilities in the North-East of the country but most of the map in that area is in shades of blue or yellow. Oddly enough, voters in Wyoming don't seem to be very opposed to regulations despite the heavy amount of facilities in their state.
+
+I then assumed the responsibility lied with ideology. Indeed, party identification (PID)is highly correlated with voter preferences in the US, and has been increasingly so in the recent years, with high amounts of polarization both in Congress and with voters. The CCES asks voters for their PID, so I proceeded to merge the mean ideological score (low values represent Democrats and high values represent Republicans) into the CD .dbf.
+
+Here's a map of the distribution of ideology in the country:
+![ideo](/Plots/ideo.png)
+
+
 
