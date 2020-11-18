@@ -1,0 +1,51 @@
+>>11/17/2020 07:03:55 PM
+REGRESSION
+----------
+SUMMARY OF OUTPUT: ORDINARY LEAST SQUARES ESTIMATION
+Data set            :  all_vars
+Dependent Variable  :  pref_index  Number of Observations:  435
+Mean dependent var  :-0.000741606  Number of Variables   :    3
+S.D. dependent var  :     0.99146  Degrees of Freedom    :  432 
+
+R-squared           :    0.388593  F-statistic           :     137.283
+Adjusted R-squared  :    0.385762  Prob(F-statistic)     :           0
+Sum squared residual:     261.439  Log likelihood        :    -506.499
+Sigma-square        :    0.605182  Akaike info criterion :        1019
+S.E. of regression  :    0.777935  Schwarz criterion     :     1031.22
+Sigma-square ML     :    0.601009
+S.E of regression ML:    0.775248
+
+-----------------------------------------------------------------------------
+       Variable      Coefficient      Std.Error    t-Statistic   Probability
+-----------------------------------------------------------------------------
+          CONSTANT       3.50768       0.223377        15.7029     0.00000
+               pid     -0.925262       0.056295        -16.436     0.00000
+         NUMPOINTS    0.00255484     0.00152439        1.67598     0.09447
+-----------------------------------------------------------------------------
+
+REGRESSION DIAGNOSTICS  
+MULTICOLLINEARITY CONDITION NUMBER   13.332522
+TEST ON NORMALITY OF ERRORS
+TEST                  DF           VALUE             PROB
+Jarque-Bera            2           232.1191          0.00000
+
+DIAGNOSTICS FOR HETEROSKEDASTICITY  
+RANDOM COEFFICIENTS
+TEST                  DF           VALUE             PROB
+Breusch-Pagan test     2            10.9818          0.00412
+Koenker-Bassett test   2             3.9558          0.13836
+
+DIAGNOSTICS FOR SPATIAL DEPENDENCE   
+FOR WEIGHT MATRIX : all_vars
+   (row-standardized weights)
+TEST                          MI/DF        VALUE          PROB
+Moran's I (error)             0.0913        3.1437        0.00167
+Lagrange Multiplier (lag)       1          10.8562        0.00098
+Robust LM (lag)                 1           1.9510        0.16247
+Lagrange Multiplier (error)     1           9.0364        0.00265
+Robust LM (error)               1           0.1312        0.71716
+Lagrange Multiplier (SARMA)     2          10.9874        0.00411
+============================== END OF REPORT ================================
+
+
+
