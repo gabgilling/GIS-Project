@@ -23,10 +23,16 @@ Let's look at the distribution of the preferences:
 
 We're interested in assessing visually whether higher amounts of GHG emitting facilities correlates with weaker desire for regulation. Unfortunately, this first map doesn't seem to tell us a clear story, so we need to look at additional variables. For instance, there is a very heavy concentration of facilities in the North-East of the country but most of the map in that area is in shades of blue or yellow. Oddly enough, voters in Wyoming don't seem to be very opposed to regulations despite the heavy amount of facilities in their state.
 
-I then assumed the responsibility lied with ideology. Indeed, party identification (PID)is highly correlated with voter preferences in the US, and has been increasingly so in the recent years, with high amounts of polarization both in Congress and with voters. The CCES asks voters for their PID, so I proceeded to merge the mean ideological score (low values represent Democrats and high values represent Republicans) into the CD .dbf.
+I then assumed the responsibility lied with ideology. Indeed, party identification (PID)is highly correlated with voter preferences in the US, and has been increasingly so in the recent years, with high amounts of polarization both in Congress and with voters. The CCES asks voters for their PID, so I proceeded to merge the mean ideological score (low values represent Democrats and high values represent Republicans) into the CD shape file by merging attributes in QGIS.
 
 Here's a map of the distribution of ideology in the country:
 ![ideo](/Plots/ideo.png)
+
+The story told by ideology seems a bit clearer and seems to point towards a clearer correlation: places with higher values for ideology (Red - Republicans) tend to score lower on the preference index.
+
+A last check was to plot the mean amount of CO2 Emissions by joining summary attributes around 10km buffers around the facilities in QGIS.
+
+![ghg](/Plots/ghg.png)
 
 
 
