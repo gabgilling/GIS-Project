@@ -1,0 +1,15 @@
+---
+title: "hw2models"
+author: "Gabriel Gilling"
+date: "12/1/2020"
+output: html_document
+---
+
+Let's start by loading in our packages.
+
+```{r cars}
+library(spdep)
+library(rgdal)
+library(spatialreg)
+```
+

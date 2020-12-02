@@ -19,6 +19,11 @@ tests <- lm.LMtests(fit, W, test = "all", zero.policy = T)
 sar <- lagsarlm(pref_index ~ pid + NUMPOINTS, data = all_vars@data, W, zero.policy = T)
 err <- errorsarlm(pref_index ~ pid + NUMPOINTS, data = all_vars@data, W, zero.policy = T)
 
-summary(sar)
+
+require(memisc)
+
+
+
+print(sar)
 
 summary(err)
