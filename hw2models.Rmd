@@ -2,14 +2,103 @@
 title: "hw2models"
 author: "Gabriel Gilling"
 date: "12/1/2020"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
-Let's start by loading in our packages.
+In this lab I am interested in assessing the determinants of preferences for environmental regulations in the 116th Congressional Districts.
+The response variable is an index I built using CCES questionnaires (see previous lab) to measure respondent preferences at the CD level. For the sake of this lab, I am using a simple aggregated measure, where responses are tallied and then summarised at the CD level.
 
+I have 4 dependent variables: the number of GHG emitting facilities (GHGEF) in a CD (using count by location in QGIS), the average level of C02 emissions from those GHGEFs within a 10km buffer (computed in QGIS), a Party Idenfication variable constructed from average PID responses in the CCES (again tallied and aggregated at the CD level) and finally an index variable representing House member roll call votes accessible at [govtrack](https://www.govtrack.us/congress/bills/subjects/environmental_protection/6038?fbclid=IwAR1lLZp4jvnExWOOBPN8xC1j6lTNkuX4y_fYt5HvfeTy9mzXKrciKdlh1Io#terms2=6040&bill_type[]=3,1,5) for bills passed around environmental protection in the 116th congress.
+
+The idea is to understand what plays the most important role in determining environmental preferences: do voters pick up on queues from their representatives? or are their preferences amongst party lines? or finally, are they a matter of proximity to GHGEFs, a proxy for employment and economic welfare?
+
+Because of the highly polarized nature of the 116th congress, I am testing the hypothesis that the determinants of support for regulation is a matter of political ideology above all else.
+
+Let's start by loading in our packages.
 ```{r cars}
 library(spdep)
 library(rgdal)
 library(spatialreg)
 ```
+
+Let's read in our generate shapefile with all of the data.
+
+```{r}
+shp_df <- readOGR("/Users/gabgilling/Documents/Documents - Gabriel’s MacBook Pro/GitHub/GIS-Project/shapefiles")
+```
+
+For model one simply run an ordinary linear regression.  Include at least one control variable.  
+
+```{r}
+m1 <- lm(f_pref_ind ~ NUMPOINTS + GHG.QUANTI + votes_by_1 + as.numeric(f_pid), data = shp_df@data)
+summary(m1)
+```
+
+This model's output is surprising: while the congressional roll call votes are highly significant, PID isn't. On the other hand, the number of GHGEFs in a CD is quite predictive of preferences: the higher the number of GHGEFs in a CD, the less a respodent is likely to support regulations. The sign of the coefficient for *votes_by_1* makes sense: the more a congressperson votes in favor of regulating the environment, the more likely his electorate is as well.
+
+I am using a queen's contiguity weights, which offer a less stringent definition of what constitutes a CD's neighbor: any CD that shares a vertex, not just an edge, will be included. This makes intuitive sense as we do not think that spatial dependency in the variables we are assessing is just a matter of sharing a border, but rather whether there is connectivity at all between the CDs.
+
+Let's add the continguity and create the weights, and then run the spatial dependence tests:
+
+First, Moran's I:
+
+```{r}
+
+list.queen <-poly2nb(shp_df, queen = T)
+
+W <- nb2listw(list.queen, style = "W", zero.policy = T)
+
+moran.lm <- lm.morantest(m1, W, alternative = "two.sided", zero.policy =  T)
+
+print(moran.lm)
+
+```
+
+The p-value is extremely low and we can conclude spatial dependence is an issue.
+
+Now let's run more tests:
+
+```{r}
+print(lm.LMtests(m1, W, test = "all", zero.policy = T))
+```
+
+The output above tells us that our model suffers from both spatial autocorrelation for both the error and the lag, but that using Robust Errors allievates the issue.
+
+Let's run a 2nd model with robust standard errors:
+
+```{r}
+err <- errorsarlm(m1, data = shp_df@data, W, zero.policy = T)
+
+summary(err)
+```
+
+This is extremely interesting: when using robust standard errors the number of GHGEFs is no longer significant, however, a respondent's PID is now statistically significant. This goes in hand with the original hypothesis: in this polarized climate, ideological attitudes (your party ID and how your congressperson votes) trumps economic determinants.
+
+Let's run a third model, taking out economic factors:
+
+```{r}
+m2 <- lm(f_pref_ind ~votes_by_1 + as.numeric(f_pid), data = shp_df@data)
+
+W <- nb2listw(list.queen, style = "W", zero.policy = T)
+
+moran.lm2 <- lm.morantest(m2, W, alternative = "two.sided", zero.policy =  T)
+
+print(moran.lm2)
+
+print(lm.LMtests(m2, W, test = "all", zero.policy = T))
+```
+
+
+We run into the same issues as before, so we can simply run a robust error model.
+
+```{r}
+err2 <- errorsarlm(m2, data = shp_df@data, W, zero.policy = T)
+
+summary(err2)
+```
+
+We can interpret the model output as such: for *votes_by_1* comparing two respondents that share the same ideological score, an increase of 1 unit in the roll call vote index is associated by an increase of 0.97 units in the environmental regulation preference index. This isn't very intuitively understandable but the gist is the same: when an congressperson favors regulation, his constituents have a tendency to favor them too (the opposite is true). The standard error is tiny compared to the coefficient, so the variable is very significant.
+
 
